@@ -1,19 +1,29 @@
 #include <SPI.h>
 #include <MFRC522.h>
+#include <SD.h>
 
 #define RST_PIN         9
 #define SS_PIN          10
 
 MFRC522 rfid(SS_PIN, RST_PIN);
+File sdFile;
 
 void setup() {
 	Serial.begin(9600);
 	while (!Serial);		// Do nothing if no serial port is opened
-	mfrc522.PCD_Init();		// Init MFRC522
+
+  	// SD
+	if (!SD.begin(4)) {
+		Serial.println("SD card init. failed");
+		while (1);
+	}
+	Serial.println("(+) SD");
+
+	rfid.PCD_Init();		// Init MFRC522
 	Serial.println(F("Scan PICC to see UID, SAK, type, and data blocks..."));
 }
 
-void loop() {
+void loop() { 
 	// Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
 	if ( ! rfid.PICC_IsNewCardPresent()) {
 		return ;
@@ -27,16 +37,23 @@ void loop() {
 	MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
 
   	Serial.print(F("RFID Tag UID: "));
- 	printHex(rfid.uid.uidByte, rfid.uid.size);
-  	Serial.println("");
+  	sdFile = SD.open("datas.txt", FILE_WRITE);
+  
+  	// if file opened correctly
+  	if (sdFile) {
+		writeHex(rfid.uid.uidByte, rfid.uid.size, sdFile);
+		file.close();
+ 	}  
+	Serial.println("");
 
-  	rfid.PICC_HaltA();
+	rfid.PICC_HaltA();
 
 }
 
-void printHex(byte *buffer, byte bufferSize) {
-	for (byte i = 0; i < bufferSize; i++) {
-		Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-		Serial.print(buffer[i], HEX);
-	}
+void writeHex(byte *buffer, byte bufferSize, File file) {
+  for (byte i = 0; i < bufferSize; i++) {
+    file.print(buffer[i] < 0x10 ? " 0" : " ");
+    file.print(buffer[i], HEX);
+    file.println("");
+  }
 }
