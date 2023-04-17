@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 # define CNY        A0
-# define WATER_LVL   2
+# define WATER_LVL  2
 # define PUMP       3
 # define WATER      4
 # define RFID_PB1   5
