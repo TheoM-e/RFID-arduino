@@ -99,13 +99,3 @@ void loop() {
     }
 
 }
-
-void setupPin(int inputPins[], int outputPins[]) {
-    for (int i; i < sizeof(inputPins) / sizeof(int); i++) {
-        pinMode(i, INPUT_PULLUP);
-    }
-
-    for (int i; i < sizeof(outputPins) / sizeof(int); i++) {
-        pinMode(i, OUTPUT);
-    }
-}
