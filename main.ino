@@ -9,8 +9,6 @@
 # define RFID_PB2   5 // pb
 
 int cards[] = {3, 2, 1, 3, 3};
-int inputPins[] = {RFID_PB1, RFID_PB2, WATER_LVL};
-int outputPins[] = {PUMP};
 int rfidPb2Value = 0;
 
 // init lcd screen
@@ -37,7 +35,7 @@ void setup() {
 void loop() {
 
     // change card with pb
-    if (digitalRead(RFID_PB1) == LOW){
+    if (digitalRead(RFID_PB1) == LOW) {
         rfidPb2Value < ((sizeof(cards) / sizeof(int)) - 1) ? rfidPb2Value++ : (rfidPb2Value = 0);
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -48,8 +46,9 @@ void loop() {
         lcd.print("].");
         Serial.print("A ");
         delay(1500);
-        lcd.clear();        
+        lcd.clear();
     }
+
     // do nothing until card scanned
     if (digitalRead(RFID_PB2) == HIGH) {
         lcd.setCursor(0, 0);
