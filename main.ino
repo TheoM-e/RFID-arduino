@@ -57,7 +57,7 @@ void loop() {
         return;
     }
 
-    // no more drink
+    // no more credits
     if (cards[rfidPb2Value] == 0) {
         lcd.setCursor(0, 0);
         lcd.print("Credits insuffisants");
